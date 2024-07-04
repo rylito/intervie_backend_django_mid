@@ -1,3 +1,6 @@
+import pytz
+import datetime
+
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.views import APIView
@@ -27,13 +30,31 @@ class InventoryListCreateView(APIView):
         return Response(serializer.data, status=201)
     
     def get(self, request: Request, *args, **kwargs) -> Response:
-        serializer = self.serializer_class(self.get_queryset(), many=True)
-        
+        after_date = request.query_params.get('after_date')
+
+        timestamp = None
+
+        if after_date:
+            try:
+                timestamp = datetime.datetime.strptime(after_date, '%Y-%m-%d')
+            except Exception as e:
+                return Response({'error': str(e)}, status=400)
+            else:
+                # make aware to avoid DB warning, assume UTC
+                timestamp = timestamp.replace(tzinfo=pytz.timezone('utc'))
+
+        serializer = self.serializer_class(self.get_queryset(timestamp), many=True)
+
         return Response(serializer.data, status=200)
-    
-    def get_queryset(self):
-        return self.queryset.all()
-    
+
+    def get_queryset(self, after_date=None):
+        filter_args = {}
+
+        if after_date is not None:
+            filter_args = {'created_at__gt': after_date}
+
+        return self.queryset.filter(**filter_args)
+
 
 class InventoryRetrieveUpdateDestroyView(APIView):
     queryset = Inventory.objects.all()
