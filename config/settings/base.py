@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'interview.core',
     'interview.inventory',
-    'interview.order'
+    'interview.order',
+    'interview.profiles'
 ]
 
 MIDDLEWARE = [
@@ -109,6 +110,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Custom auth user model
+# https://docs.djangoproject.com/en/5.0/topics/auth/customizing/#substituting-a-custom-user-model
+
+AUTH_USER_MODEL = 'profiles.UserProfile'
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
@@ -127,6 +132,11 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = 'interview/static'
+
+# Set these so the avatar field on the UserProfile model workes correctly
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = 'interview/media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
