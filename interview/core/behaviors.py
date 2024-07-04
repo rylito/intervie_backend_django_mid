@@ -32,11 +32,11 @@ class IsActiveModel(models.Model):
     
     @classmethod
     def activate(cls, pk: int):
-        cls.objects.filter(pk=pk).update(is_active=False)
+        cls.objects.filter(pk=pk).update(is_active=True)
     
     @classmethod
     def deactivate(cls, pk: int):
-        cls.objects.filter(pk=pk).update(is_active=True)
+        cls.objects.filter(pk=pk).update(is_active=False)
         
 
 class NameModel(models.Model):
