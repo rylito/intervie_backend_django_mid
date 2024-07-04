@@ -28,7 +28,7 @@ class InventoryListCreateView(generics.ListCreateAPIView):
         except Exception as e:
             return Response({'error': str(e)}, status=400)
 
-        request.data['metadata'] = metadata.json()
+        request.data['metadata'] = metadata.dict()
         serializer = self.serializer_class(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=400)
