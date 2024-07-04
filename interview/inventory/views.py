@@ -37,12 +37,10 @@ class InventoryListCreateView(APIView):
         if after_date:
             try:
                 timestamp = datetime.datetime.strptime(after_date, '%Y-%m-%d')
-            except ValueError:
-                # If I had more time, I'd implement better error handling, but
-                # for the sake of this exercise, just ignore values that don't parse to a date
-                pass
+            except Exception as e:
+                return Response({'error': str(e)}, status=400)
             else:
-                # make aware, assume utc to avoid DB warning
+                # make aware to avoid DB warning, assume UTC
                 timestamp = timestamp.replace(tzinfo=pytz.timezone('utc'))
 
         serializer = self.serializer_class(self.get_queryset(timestamp), many=True)
