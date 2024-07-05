@@ -1,3 +1,5 @@
+import json
+
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.views import APIView
@@ -17,7 +19,7 @@ class InventoryListCreateView(APIView):
         except Exception as e:
             return Response({'error': str(e)}, status=400)
         
-        request.data['metadata'] = metadata.dict()
+        request.data['metadata'] = json.loads(metadata.json())
         serializer = self.serializer_class(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=400)
